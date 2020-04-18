@@ -1,26 +1,42 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import PropTypes from 'prop-types';
+import ContactForm from './ContactForm/ContactForm';
+import ContactList from './ContactList/ContactList';
+import Filter from './Filter/Filter';
+import ThemeContext from './ThemeContext/ThemeContext';
 
-function App() {
+export default function App({ toggleTheme }) {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <ThemeContext.Consumer>
+      {theme => (
+        <div
+          className="body"
+          style={{ background: theme.bodybg, color: theme.fontColor }}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          <div className="theme-selector">
+            <label htmlFor="theme" className="switch">
+              <input
+                type="checkbox"
+                id="theme"
+                checked={theme.type === 'light'}
+                onChange={event => toggleTheme(event.currentTarget.value)}
+              />
+              <span className="slider round">
+                Change to {theme.changeTo} theme
+              </span>
+            </label>
+          </div>
+          <h1>Phonebook</h1>
+          <ContactForm />
+          <h2>Contacts</h2>
+          <Filter />
+          <ContactList />
+        </div>
+      )}
+    </ThemeContext.Consumer>
   );
 }
 
-export default App;
+App.propTypes = {
+  toggleTheme: PropTypes.func.isRequired,
+};
